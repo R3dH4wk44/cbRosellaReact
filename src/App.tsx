@@ -14,12 +14,13 @@ import AdminLogin from '@pages/adminlogin';
 import AdminDashboard from '@pages/admindashboard';
 import Login from '@pages/login';
 import Register from '@pages/register';
-
+import NavBar from '@components/NavBar';
 
 function App() {
 
   return (
     <>
+      <NavBar />
       <Routes>
         <Route path="/" element={<Inici/>} />
         <Route path="/qui-som" element={<QuiSom />} />
