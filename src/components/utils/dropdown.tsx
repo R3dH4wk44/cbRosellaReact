@@ -1,43 +1,48 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router";
+import { AnimatePresence, motion } from 'framer-motion'
+import { FlyoutProps } from "@components/NavBar";
+interface DropdownProps {
+  children: React.ReactNode; // Contenido del Dropdown, como elementos <li> o anidaciones.
+  href: string; // Opcional: enlace para el botón del Dropdown.
+  Content?: React.ElementType;
+  ContentProps?: FlyoutProps; // Contenido del botón o encabezado del Dropdown.
+}
 
-type DropdownItem = {
-  title: string;
-  link: string;
-};
-
-type DropdownProps = {
-  items: DropdownItem[];
-  title: string;
-};
-
-const Dropdown: React.FC<DropdownProps> = ({ items, title }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const Dropdown: React.FC<DropdownProps> = ({ children, href, Content, ContentProps }) => {
+  const [open, setOpen] = useState(false);
+  const showFlyout = open && Content;
   return (
-    <li className="relative group">
-      <div
-        className="px-4 py-2 dark:text-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 cursor-pointer"
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-      >
-        {title}
-      </div>
+    <div className=" group relative h-fit w-fit z-20"
+      onMouseEnter={() => { setOpen(true); }}
+      onMouseLeave={() => { setOpen(false); }}
+    >
+      <li className="relative text-zinc-800 dark:text-white text-xl">
+        <Link to={href}>
+        {children}
+          <span style={{ transform: open ? "scaleX(1)" : "scaleX(0)" }} className=" absolute -bottom-2 -left-2 -right-2 h-1 origin-left  rounded-full bg-red-600 transition-transform duration-300 ease-out"   ></span>
+        </Link>
+      </li>
 
-      {isOpen && (
-        <ul className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10">
-          {items.map((item, index) => (
-            <li key={index} className="px-4 py-2 hover:bg-gray-100">
-              <Link to={item.link} className="block text-gray-800">
-                {item.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </li>
+      <AnimatePresence>
+      {showFlyout && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{opacity: 1, y: 0}}
+          exit={{ opacity: 0, y: 20 }}
+            style={{ translateX: "-50%  " }}
+            transition={{duration: 0.3 , ease: "easeOut"}}
+        className="absolute left-1/2 top-12 z-50">
+        <div className=" absolute -top-6 left-0 right-0 h-6 bg-transparent"></div>
+        <div className=" absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 dark:bg-zinc-800 bg-zinc-100 mb-5"></div>
+            <Content {...ContentProps} />
+          </motion.div>)}
+        </AnimatePresence>  
+     
+    </div>
   );
 };
 
 export default Dropdown;
-  
+
+

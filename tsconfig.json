@@ -8,7 +8,8 @@
       "@services/*": ["services/*"],
       "@contexts/*": ["contexts/*"],
       "@types/*": ["types/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "@assets/*": ["assets/*"],
     }
   },
   "files": [],
